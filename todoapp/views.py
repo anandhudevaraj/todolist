@@ -66,6 +66,8 @@ def add_todo(request):
 
 
 def home(request):
+    if not request.user.is_authenticated:
+        return redirect('todoapp:login')
     current_user = request.user
     incomplete_todos = current_user.todos.filter(completed=False).order_by('-created_date')
     complete_todos = current_user.todos.filter(completed=True).order_by('-completed_date')
