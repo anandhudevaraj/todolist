@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="alert alert-light" role="alert">
+    <p>Welcome {{ username }}</p>
+</div>
+{% if messages %}
+    <div class="alert alert-primary" role="alert">
+  {{ messages.0 }}
+</div>
+{% endif %}
+<!--Add New Todos-->
+<div class="container" style="padding-top:4%;">
+    <h2>Add New ToDo</h2>
+    <form action="{% url 'todoapp:add_todo' %}" method="post">
+        {% csrf_token %}
+        <div class="form-row align-items-center">
+        <div class="col-auto" style="width:60%;">
+          <label class="sr-only" for="inlineFormInput">Name</label>
+          <input type="text" class="form-control mb-2" name="todo_text" id="inlineFormInput" placeholder="Add Todo">
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-primary mb-2">Add</button>
+        </div>
+        </div>
+    </form>
+</div>
+<!--Preview Current todos-->
+<div class="container" style="padding-top:5%;">
+    {% if incomplete_todos %}
+    <h2 style="padding-bottom:2%;">Pending Tasks</h2>
+{% for item in incomplete_todos %}
+    <ul class="list-group list-group-horizontal-md">
+      <li class="list-group-item" style="width:50%;">{{item.todo_text}}</li>
+      <li class="list-group-item" style="width:25%;">{{ item.created_date }}</li>
+        <li class="list-group-item"><a href="{% url 'todoapp:todo_done' item.id %}"><button type="button" class="btn btn-primary">Done</button></a></li>
+    </ul>
+{% endfor %}
+    {% else %}
+    <h2>No Pending Tasks</h2>
+{% endif %}
+    </div>
+
+<div class="container" style="padding-top:5%;">
+    {% if complete_todos %}
+    <h2 style="padding-bottom:2%;">Completed Tasks</h2>
+{% for item in complete_todos %}
+    <ul class="list-group list-group-horizontal-md">
+      <li class="list-group-item" style="width:50%;">{{item.todo_text}}</li>
+      <li class="list-group-item" style="width:25%;">{{ item.completed_date }}</li>
+    </ul>
+{% endfor %}
+    {% else %}
+    <h2>No Completed Tasks</h2>
+{% endif %}
+    </div>
+
+{% endblock %}
